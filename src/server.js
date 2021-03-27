@@ -5,39 +5,38 @@ const Utils = require('./utils');
 const fetch = require('node-fetch')
 
 
-
 app.post('/weather', async (req, res) => {
-  const { city, state } = req.body;
+  const { city, state, units } = req.body;
   let weatherData;
   if(!city) {
     res.json({error: "You must choose a city."})
   } else if(!state) {
     res.json({error: "You must choose a state."})
   } else {
-    // let url = encodeURI(`api.openweathermap.org/data/2.5/weather?q=${city},${state},us&appid=187c350bc499319e901a3878bf509cae`);
-    let url = `api.openweathermap.org/data/2.5/weather?q=boston,ma,us&appid=187c350bc499319e901a3878bf509cae`
-    console.log(url)
-    fetch(url)
-    // .then(res => res.json())
-    .then(res => console.log(res))
-    
+    let url = encodeURI(`http://api.openweathermap.org/data/2.5/weather?q=${city},${state},us&units=${units}&appid=${process.env.WEATHER_APP_API_KEY}`);
+
     // const weatherData = await Utils.makeFetch(url)
 
-    // weatherData = await fetch(url, {
-    //   method: 'GET',
-    //   mode: 'cors',
-    //   credentials: '*',
-    //   headers: {
-    //       'Content-Type': 'application/json',
-    //   },
-    //   body: JSON.stringify()
-    // })
-    // .then(res => res.json())
+    weatherData = await fetch(url, {
+      method: 'GET',
+      mode: 'cors',
+      credentials: '*',
+      headers: {
+          'Content-Type': 'application/json',
+      },
+      body: JSON.stringify()
+    })
+    .then(res => {
+      if(res.ok){
+        return res.json()
+      } else {
+        return res.json({error: "error"})
+      }
+      })
 
-    // console.log(weatherData)
-    res.send('ho')
+    res.send(weatherData)
   }
-})
+});
 
 app.get('/', (req, res) => {
   res.send('Hello, world!')
