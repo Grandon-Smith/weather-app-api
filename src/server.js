@@ -15,7 +15,7 @@ app.post('/weather', async (req, res) => {
   } else if(!units) {
     res.json({error: "You must choose a unit type."})
   } else {
-    let url = encodeURI(`http://api.openweathermap.org/data/2.5/weather?q=${city},${state},us&units=${units}&appid=${process.env.WEATHER_APP_API_KEY}`);
+    let url = encodeURI(`https://api.openweathermap.org/data/2.5/weather?q=${city},${state},us&units=${units}&appid=${process.env.WEATHER_APP_API_KEY}`);
 
     // const weatherData = await Utils.makeFetch(url)
 
@@ -34,9 +34,12 @@ app.post('/weather', async (req, res) => {
       } else {
         return res.json({error: "There was an problem fetching your weather data"})
       }
-      })
-
-    res.send(weatherData)
+    })
+    if(weatherData.cod == 404) {
+      res.json({error: "That city isn't in our database. Please make sure the location is spelled correctly."})
+    } else {
+    res.json(weatherData)
+    }
   }
 });
 
