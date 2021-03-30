@@ -16,9 +16,6 @@ app.post('/weather', async (req, res) => {
     res.json({error: "You must choose a unit type."})
   } else {
     let url = encodeURI(`https://api.openweathermap.org/data/2.5/weather?q=${city},${state},us&units=${units}&appid=${process.env.WEATHER_APP_API_KEY}`);
-
-    // const weatherData = await Utils.makeFetch(url)
-
     weatherData = await fetch(url, {
       method: 'GET',
       mode: 'cors',
