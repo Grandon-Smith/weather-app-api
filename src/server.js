@@ -16,7 +16,7 @@ app.post('/test', async (req, res) => {
   } else {
     res.send('test success')
   }
-
+})
 
 app.post('/weather', async (req, res) => {
   res.setHeader('Access-Control-Allow-Origin', '*');
