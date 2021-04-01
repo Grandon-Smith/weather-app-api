@@ -7,6 +7,7 @@ const fetch = require('node-fetch')
 
 app.post('/weather', async (req, res) => {
   console.log('post was hit')
+  res.setHeader('Access-Control-Allow-Origin', '*');
   const { city, state, units } = req.body;
   if(!city) {
     res.json({error: "You must choose a city."})
@@ -23,7 +24,6 @@ app.post('/weather', async (req, res) => {
       headers: {
           'Content-Type': 'application/json',
           'Accept': 'application/json',
-          'Access-Control-Allow-Origin': '*'
       },
       body: JSON.stringify()
     })
@@ -38,11 +38,10 @@ app.post('/weather', async (req, res) => {
     const weatherUrl = encodeURI(`https://api.openweathermap.org/data/2.5/onecall?lat=${lat}&lon=${lon}&exclude=minutely,alerts&units=${units}&appid=187c350bc499319e901a3878bf509cae`);
     const moreWeatherData = await fetch(weatherUrl, {
       method: 'GET',
-      mode: 'no-cors',
-      headers: {
-          'Content-Type': 'application/json',
-          'Access-Control-Allow-Origin': '*'
-      },
+      // headers: {
+      //     'Content-Type': 'application/json',
+      //     'Access-Control-Allow-Origin': '*'
+      // },
       body: JSON.stringify()
     })
     .then(res => {

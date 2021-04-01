@@ -11,10 +11,11 @@ const morganOption = (NODE_ENV === 'production')
 ? 'tiny'
 : 'common';
 
+app.set('view-engine', 'react')
 app.use(express.json())
 app.use(morgan(morganOption));
 app.use(helmet());
-app.use(cors());
+app.use(cors({origin: '*'}));
 
 
 app.use(function errorHandler(error, req, res, next) {
