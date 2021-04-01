@@ -14,7 +14,24 @@ app.post('/test', async (req, res) => {
   } else if(!units) {
     res.json({error: "You must choose a unit type."})
   } else {
-    res.send('test success')
+    let url = encodeURI(`https://api.openweathermap.org/data/2.5/weather?q=${city},${state},us&units=${units}&appid=${process.env.WEATHER_APP_API_KEY}`);
+
+    let firstWeatherData = await fetch(url, {
+      method: 'GET',
+      headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+      },
+      body: JSON.stringify()
+    })
+    .then(res => {
+      if(res.ok){
+        return res.json()
+      } else {
+        return res.json({error: "There was an problem fetching your weather data"})
+      }
+    })
+    res.json({firstWeatherData})
   }
 })
 
