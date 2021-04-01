@@ -6,6 +6,7 @@ const fetch = require('node-fetch')
 
 
 app.post('/weather', async (req, res) => {
+  console.log('post was hit')
   const { city, state, units } = req.body;
   if(!city) {
     res.json({error: "You must choose a city."})
@@ -18,10 +19,11 @@ app.post('/weather', async (req, res) => {
 
     let firstWeatherData = await fetch(url, {
       method: 'GET',
-      mode: 'cors',
-      credentials: '*',
+      // mode: 'cors',
       headers: {
           'Content-Type': 'application/json',
+          'Accept': 'application/json',
+          'Access-Control-Allow-Origin': '*'
       },
       body: JSON.stringify()
     })
@@ -36,10 +38,10 @@ app.post('/weather', async (req, res) => {
     const weatherUrl = encodeURI(`https://api.openweathermap.org/data/2.5/onecall?lat=${lat}&lon=${lon}&exclude=minutely,alerts&units=${units}&appid=187c350bc499319e901a3878bf509cae`);
     const moreWeatherData = await fetch(weatherUrl, {
       method: 'GET',
-      mode: 'cors',
-      credentials: '*',
+      mode: 'no-cors',
       headers: {
           'Content-Type': 'application/json',
+          'Access-Control-Allow-Origin': '*'
       },
       body: JSON.stringify()
     })
@@ -50,6 +52,7 @@ app.post('/weather', async (req, res) => {
         return res.json({error: "There was an problem fetching your weather data"})
       }
     })
+    .catch()
     if(moreWeatherData.cod == 404) {
       res.status(404).json({error: "That city isn't in our database. Please make sure the location is spelled correctly."})
     } else {
